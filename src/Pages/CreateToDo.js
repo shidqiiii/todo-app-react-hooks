@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import { Button, Card, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
 
 export default function CreateToDo() {
@@ -7,6 +7,19 @@ export default function CreateToDo() {
     ]);
     const [inputItems, setInputItems] = useState("");
     const [currentIndex, setCurrentIndex] = useState(-1);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const [matches, setMatches] = useState("")
+
+    useEffect(() => {
+        window
+            .matchMedia("(max-width: 767px)")
+            .addEventListener('change', e => {
+                setMatches(e.matches)
+                console.log(e.matches)
+            });
+    }, []);
+
 
     const changeValue = (e) => {
         setInputItems(e.target.value);
@@ -14,16 +27,18 @@ export default function CreateToDo() {
 
     const submitItem = () => {
         let newItems = items;
+        let checkInput = inputItems.trim();
 
-        if (currentIndex === -1) {
-            newItems = [...items, inputItems];
+        if (currentIndex === -1 && checkInput !== "") {
+            newItems = [...items, checkInput];
         } else {
-            newItems[currentIndex] = inputItems;
+            newItems[currentIndex] = checkInput;
         }
 
         setItems(newItems);
         setInputItems("");
         setCurrentIndex(-1);
+        setIsEdit(false);
     }
 
     const editItem = (e) => {
@@ -31,6 +46,7 @@ export default function CreateToDo() {
         let editItem = items[index];
         setInputItems(editItem);
         setCurrentIndex(e.target.value);
+        setIsEdit(true);
     }
 
     const deleteItem = (e) => {
@@ -50,18 +66,20 @@ export default function CreateToDo() {
 
     return (
         <>
-            <Container className='mt-5'>
+            <Container className='my-5'>
                 <Card bg="dark" text='white' className='py-5'>
                     <Card.Body>
                         <Card.Title className='text-center'>Create todo</Card.Title>
                         <Container className='px-5 pt-3'>
                             <div className="input mb-5">
                                 <Row>
-                                    <Col>
-                                        <Form.Control type="text" className='px-3 py-2' placeholder='testing' value={inputItems} onChange={changeValue} />
+                                    <Col className="my-2">
+                                        <Form.Control type="text" className='px-3 py-2' placeholder='input here...' value={inputItems} onChange={changeValue} />
                                     </Col>
-                                    <Col lg={2}>
-                                        <Button variant="light" className='px-3 py-2' onClick={submitItem}>Add</Button>
+                                    <Col md={3} className="my-2" align="center">
+                                        <Button size={matches ? "sm" : "md"} variant="light" className='px-3 py-2' onClick={submitItem} style={matches ? { width: '100%' } : { width: '90%' }}>
+                                            {isEdit ? 'Update' : 'Add'}
+                                        </Button>
                                     </Col>
                                 </Row>
                             </div>
@@ -75,8 +93,8 @@ export default function CreateToDo() {
                                                     <ListGroup.Item className='d-flex justify-content-between' key={index}>
                                                         <p className='my-auto'>{item}</p>
                                                         <div className="btn-action d-flex gap-2">
-                                                            <Button variant="warning" value={index} onClick={editItem}>Edit</Button>
-                                                            <Button variant="danger" value={index} onClick={deleteItem}>Delete</Button>
+                                                            <Button variant="warning" value={index} onClick={editItem} size={matches ? "sm" : "md"} >Edit</Button>
+                                                            <Button variant="danger" value={index} onClick={deleteItem} size={matches ? "sm" : "md"}>Delete</Button>
                                                         </div>
                                                     </ListGroup.Item>
                                                 )
@@ -86,8 +104,6 @@ export default function CreateToDo() {
                                 </Card>
                             </div>
                         </Container>
-
-
                     </Card.Body>
                 </Card>
             </Container >
