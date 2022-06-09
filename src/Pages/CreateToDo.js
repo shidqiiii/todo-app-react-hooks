@@ -6,16 +6,31 @@ export default function CreateToDo() {
         "Mandi pagi", "Gosok Gigi", "Cuci Muka"
     ]);
     const [inputItems, setInputItems] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(-1);
 
     const changeValue = (e) => {
         setInputItems(e.target.value);
     }
 
     const submitItem = () => {
-        let newItems = [...items, inputItems];
+        let newItems = items;
+
+        if (currentIndex === -1) {
+            newItems = [...items, inputItems];
+        } else {
+            newItems[currentIndex] = inputItems;
+        }
 
         setItems(newItems);
         setInputItems("");
+        setCurrentIndex(-1);
+    }
+
+    const editItem = (e) => {
+        let index = parseInt(e.target.value);
+        let editItem = items[index];
+        setInputItems(editItem);
+        setCurrentIndex(e.target.value);
     }
 
     const deleteItem = (e) => {
@@ -57,10 +72,10 @@ export default function CreateToDo() {
                                         {
                                             items.map((item, index) => {
                                                 return (
-                                                    <ListGroup.Item className='d-flex justify-content-between' key={item}>
+                                                    <ListGroup.Item className='d-flex justify-content-between' key={index}>
                                                         <p className='my-auto'>{item}</p>
                                                         <div className="btn-action d-flex gap-2">
-                                                            <Button variant="warning">Edit</Button>
+                                                            <Button variant="warning" value={index} onClick={editItem}>Edit</Button>
                                                             <Button variant="danger" value={index} onClick={deleteItem}>Delete</Button>
                                                         </div>
                                                     </ListGroup.Item>
