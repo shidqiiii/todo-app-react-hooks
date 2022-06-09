@@ -7,6 +7,17 @@ export default function CreateToDo() {
     ]);
     const [inputItems, setInputItems] = useState("");
 
+    const changeValue = (e) => {
+        setInputItems(e.target.value);
+    }
+
+    const submitItem = () => {
+        let newItems = [...items, inputItems];
+
+        setItems(newItems);
+        setInputItems("");
+    }
+
     const deleteItem = (e) => {
         let index = parseInt(e.target.value);
         let deleteItem = items[index];
@@ -19,7 +30,6 @@ export default function CreateToDo() {
                 return newItems;
             }
         })
-        console.log(newItems);
         setItems(newItems)
     }
 
@@ -33,10 +43,10 @@ export default function CreateToDo() {
                             <div className="input mb-5">
                                 <Row>
                                     <Col>
-                                        <Form.Control type="text" className='px-3 py-2' placeholder='testing' />
+                                        <Form.Control type="text" className='px-3 py-2' placeholder='testing' value={inputItems} onChange={changeValue} />
                                     </Col>
                                     <Col lg={2}>
-                                        <Button variant="light" className='px-3 py-2'>Add</Button>
+                                        <Button variant="light" className='px-3 py-2' onClick={submitItem}>Add</Button>
                                     </Col>
                                 </Row>
                             </div>
