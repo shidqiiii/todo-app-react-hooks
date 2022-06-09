@@ -1,5 +1,7 @@
 import { React, useState, useEffect } from 'react'
-import { Button, Card, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
+import { Card, Container } from 'react-bootstrap';
+import FormInput from '../Components/FormInput';
+import ListTodo from '../Components/ListTodo';
 
 export default function CreateToDo() {
     const [items, setItems] = useState([
@@ -71,38 +73,18 @@ export default function CreateToDo() {
                     <Card.Body>
                         <Card.Title className='text-center'>Create todo</Card.Title>
                         <Container className='px-5 pt-3'>
-                            <div className="input mb-5">
-                                <Row>
-                                    <Col className="my-2">
-                                        <Form.Control type="text" className='px-3 py-2' placeholder='input here...' value={inputItems} onChange={changeValue} />
-                                    </Col>
-                                    <Col md={3} className="my-2" align="center">
-                                        <Button size={matches ? "sm" : "md"} variant="light" className='px-3 py-2' onClick={submitItem} style={matches ? { width: '100%' } : { width: '90%' }}>
-                                            {isEdit ? 'Update' : 'Add'}
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </div>
+                            <FormInput
+                                inputItems={inputItems}
+                                changeValue={changeValue}
+                                matches={matches}
+                                submitItem={submitItem}
+                                isEdit={isEdit} />
 
-                            <div className="todo">
-                                <Card>
-                                    <ListGroup variant="flush" className='px-2'>
-                                        {
-                                            items.map((item, index) => {
-                                                return (
-                                                    <ListGroup.Item className='d-flex justify-content-between' key={index}>
-                                                        <p className='my-auto'>{item}</p>
-                                                        <div className="btn-action d-flex gap-2">
-                                                            <Button variant="warning" value={index} onClick={editItem} size={matches ? "sm" : "md"} >Edit</Button>
-                                                            <Button variant="danger" value={index} onClick={deleteItem} size={matches ? "sm" : "md"}>Delete</Button>
-                                                        </div>
-                                                    </ListGroup.Item>
-                                                )
-                                            })
-                                        }
-                                    </ListGroup>
-                                </Card>
-                            </div>
+                            <ListTodo
+                                items={items}
+                                editItem={editItem}
+                                matches={matches}
+                                deleteItem={deleteItem} />
                         </Container>
                     </Card.Body>
                 </Card>
