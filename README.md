@@ -5,7 +5,7 @@ Project build for Task Bootcamp Cooderu Week 4.
 
 ## Deploy Application
 
-[ToDoList with Hooks](https://todo-react-hooks-arunika.netlify.app/)
+[ToDoList with Hooks](https://todo-react-hook-arunika.netlify.app/)
 
 
 ## Screenshots
