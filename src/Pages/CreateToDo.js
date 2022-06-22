@@ -5,7 +5,9 @@ import ListTodo from '../Components/ListTodo';
 
 export default function CreateToDo() {
     const [items, setItems] = useState([
-        "Mandi pagi", "Gosok Gigi", "Cuci Muka"
+        { name: "Mandi pagi", isComplete: false },
+        { name: "Gosok Gigi", isComplete: false },
+        { name: "Cuci Muka", isComplete: false }
     ]);
     const [inputItems, setInputItems] = useState("");
     const [currentIndex, setCurrentIndex] = useState(-1);
@@ -30,11 +32,12 @@ export default function CreateToDo() {
     const submitItem = () => {
         let newItems = items;
         let checkInput = inputItems.trim();
+        let todo = { name: checkInput, isCompleted: false }
 
         if (currentIndex === -1 && checkInput !== "") {
-            newItems = [...items, checkInput];
+            newItems = [...items, todo];
         } else {
-            newItems[currentIndex] = checkInput;
+            newItems[currentIndex] = todo;
         }
 
         setItems(newItems);
@@ -44,15 +47,32 @@ export default function CreateToDo() {
     }
 
     const editItem = (e) => {
-        let index = parseInt(e.target.value);
-        let editItem = items[index];
+        let index = parseInt(e.currentTarget.value);
+        let editItem = items[index].name;
         setInputItems(editItem);
         setCurrentIndex(e.target.value);
         setIsEdit(true);
     }
 
+    const doneItem = (e) => {
+        let index = parseInt(e.currentTarget.value);
+        let doneItem = items[index];
+        let todo = { ...doneItem, isComplete: !doneItem.isComplete }
+
+        const newArr = items.map(element => {
+            if (element.name === doneItem.name) {
+                return { ...element, isComplete: !doneItem.isComplete };
+            }
+
+            return element;
+        });
+
+        setItems(newArr);
+        // console.log(items);
+    }
+
     const deleteItem = (e) => {
-        let index = parseInt(e.target.value);
+        let index = parseInt(e.currentTarget.value);
         let deleteItem = items[index];
         let newItems = []
 
@@ -63,7 +83,10 @@ export default function CreateToDo() {
                 return newItems;
             }
         })
-        setItems(newItems)
+        setItems(newItems);
+        setInputItems("");
+        setCurrentIndex(-1);
+        setIsEdit(false);
     }
 
     return (
@@ -84,7 +107,8 @@ export default function CreateToDo() {
                                 items={items}
                                 editItem={editItem}
                                 matches={matches}
-                                deleteItem={deleteItem} />
+                                deleteItem={deleteItem}
+                                doneItem={doneItem} />
                         </Container>
                     </Card.Body>
                 </Card>
